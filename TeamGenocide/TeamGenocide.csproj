@@ -5,7 +5,7 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>TeamGenocide</AssemblyName>
     <RootNamespace>TeamGenocide</RootNamespace>
-    <UseZoneShilariCommon>true</UseZoneShilariCommon>
+    <UseAugatonLib>true</UseAugatonLib>
     <Version>3.0.0</Version>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
