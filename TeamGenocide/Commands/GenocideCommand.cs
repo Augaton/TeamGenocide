@@ -19,7 +19,9 @@ namespace TeamGenocide.Commands
 
         public override void LoadGeneratedCommands()
         {
-            RegisterCommand(new StatusCommand("TeamGenocide", "3.1.0", Permission, builder =>
+            RegisterCommand(new StatusCommand(
+                "TeamGenocide",
+                typeof(Plugin), Permission, builder =>
             {
                 Config config = Plugin.Instance.Config;
                 builder.AppendLine($"  equipes couvertes : {config.Announcements.Count}");
