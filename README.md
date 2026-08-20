@@ -23,6 +23,38 @@ Classe-D, SCP, scientifiques, Insurrection du Chaos et forces de la Fondation.
 Chaque annonce porte son texte C.A.S.S.I.E, ses sous-titres, son broadcast, son
 hint, sa duree et son effet lumineux (couleur, zones, duree).
 
+## Dependances
+
+Ce plugin depend de **ZoneShilari.Common**, la bibliotheque partagee de la
+collection.
+
+| Fichier | Destination |
+|---|---|
+| `TeamGenocide.dll` | `Plugins/7777/` |
+| `ZoneShilari.Common.dll` | `Plugins/dependencies/` |
+| HintServiceMeow | `Plugins/7777/` |
+
+`ZoneShilari.Common.dll` ne va **jamais** dans `Plugins/7777/` : EXILED
+tenterait de le charger comme plugin. Il doit etre deploye avant ce plugin et
+mis a jour en meme temps.
+
+Pour compiler ce depot isolement, cloner
+[ZoneShilari.Common](https://github.com/Augaton/ZoneShilari.Common) a cote,
+ou passer `-p:CommonProject=chemin/vers/ZoneShilari.Common.csproj`.
+
+## Commandes staff
+
+| Commande | Permission | Effet |
+|---|---|---|
+| `teamgenocide status` | `teamgenocide.manage` | Equipes couvertes et delai d'activation |
+
+Alias `tg`.
+
+Toutes les commandes de la collection partagent le meme socle : verification de
+permission en premiere ligne, arguments bornes en longueur, exceptions
+capturees, actions a impact tracees avec l'auteur. Une commande parente sans
+argument liste ses sous-commandes.
+
 ## Note de portage
 
 La version 2.x ciblait EXILED 8.11.0. Trois defauts corriges :
