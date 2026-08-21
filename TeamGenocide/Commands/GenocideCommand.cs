@@ -19,6 +19,8 @@ namespace TeamGenocide.Commands
 
         public override void LoadGeneratedCommands()
         {
+            RegisterCommand(new CollectionCommand(Permission));
+
             RegisterCommand(new StatusCommand(
                 "TeamGenocide",
                 typeof(Plugin), Permission, builder =>

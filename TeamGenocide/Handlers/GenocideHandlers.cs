@@ -5,6 +5,8 @@ using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
 using MEC;
 using PlayerRoles;
+using AugatonLib.Arbitration;
+using AugatonLib.Bus;
 using TeamGenocide.API;
 
 namespace TeamGenocide.Handlers
@@ -51,6 +53,9 @@ namespace TeamGenocide.Handlers
                 if (!activated || ev?.Player is null)
                     return;
 
+                if (GenocideArbiter.IsSuppressed)
+                    return;
+
                 Team leaving = ev.Player.Role.Team;
 
                 if (leaving == Team.Dead)
@@ -83,6 +88,8 @@ namespace TeamGenocide.Handlers
 
                 if (handle.IsRunning)
                     pending.Add(handle);
+
+                PluginBus.Publish(BusTopics.TeamWiped, "TeamGenocide", leaving);
 
                 Log.Info($"[TeamGenocide] Equipe {leaving} entierement eliminee.");
             }

@@ -1,5 +1,6 @@
 using System;
 using Exiled.API.Features;
+using AugatonLib.Runtime;
 using TeamGenocide.Handlers;
 using PlayerEvents = Exiled.Events.Handlers.Player;
 using ServerEvents = Exiled.Events.Handlers.Server;
@@ -42,6 +43,12 @@ namespace TeamGenocide
             ServerEvents.RoundEnded += genocideHandlers.OnRoundEnded;
             ServerEvents.RestartingRound += genocideHandlers.OnRestartingRound;
 
+            PluginDirectory.Register(
+                this,
+                Capability.Hints,
+                Capability.Genocide,
+                Capability.Bus);
+
             base.OnEnabled();
         }
 
@@ -53,6 +60,9 @@ namespace TeamGenocide
             ServerEvents.RestartingRound -= genocideHandlers.OnRestartingRound;
 
             genocideHandlers?.Reset();
+
+            PluginDirectory.Unregister(this);
+
             genocideHandlers = null;
             Instance = null;
 
