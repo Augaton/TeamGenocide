@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
@@ -50,7 +51,7 @@ namespace TeamGenocide.Handlers
         {
             try
             {
-                if (!activated || ev?.Player is null)
+                if (!activated || ev?.Player is null || ev.Reason != SpawnReason.Died)
                     return;
 
                 if (GenocideArbiter.IsSuppressed)
@@ -129,7 +130,16 @@ namespace TeamGenocide.Handlers
             pending.Clear();
             announced.Clear();
             activated = false;
-            HintBridge.Clear();
+
+            try
+            {
+                HintBridge.Clear();
+                LightEffect.Release();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Reset: {e}");
+            }
         }
     }
 }

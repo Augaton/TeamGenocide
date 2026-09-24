@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Exiled.API.Features;
 using AugatonLib.Runtime;
+using PlayerRoles;
+using TeamGenocide.API;
 using TeamGenocide.Handlers;
 using PlayerEvents = Exiled.Events.Handlers.Player;
 using ServerEvents = Exiled.Events.Handlers.Server;
@@ -27,11 +30,7 @@ namespace TeamGenocide
         {
             Instance = this;
 
-            if (Config.ActivationDelay < 0f)
-            {
-                Log.Warn($"ActivationDelay ({Config.ActivationDelay}) negatif, remis a 0.");
-                Config.ActivationDelay = 0f;
-            }
+            ValidateConfig();
 
             HintBridge.YCoordinate = Config.HintYCoordinate;
             HintBridge.FontSize = Config.HintFontSize;
@@ -43,9 +42,12 @@ namespace TeamGenocide
             ServerEvents.RoundEnded += genocideHandlers.OnRoundEnded;
             ServerEvents.RestartingRound += genocideHandlers.OnRestartingRound;
 
+            ServerEvents.ReloadedConfigs += OnReloadedConfigs;
+
             PluginDirectory.Register(
                 this,
                 Capability.Hints,
+                Capability.Light,
                 Capability.Genocide,
                 Capability.Bus);
 
@@ -54,19 +56,50 @@ namespace TeamGenocide
 
         public override void OnDisabled()
         {
-            PlayerEvents.ChangingRole -= genocideHandlers.OnChangingRole;
-            ServerEvents.RoundStarted -= genocideHandlers.OnRoundStarted;
-            ServerEvents.RoundEnded -= genocideHandlers.OnRoundEnded;
-            ServerEvents.RestartingRound -= genocideHandlers.OnRestartingRound;
+            if (genocideHandlers is not null)
+            {
+                PlayerEvents.ChangingRole -= genocideHandlers.OnChangingRole;
+                ServerEvents.RoundStarted -= genocideHandlers.OnRoundStarted;
+                ServerEvents.RoundEnded -= genocideHandlers.OnRoundEnded;
+                ServerEvents.RestartingRound -= genocideHandlers.OnRestartingRound;
 
-            genocideHandlers?.Reset();
+                genocideHandlers.Reset();
+            }
 
+            ServerEvents.ReloadedConfigs -= OnReloadedConfigs;
             PluginDirectory.Unregister(this);
 
             genocideHandlers = null;
             Instance = null;
 
             base.OnDisabled();
+        }
+
+        private void OnReloadedConfigs()
+        {
+            try
+            {
+                ValidateConfig();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"OnReloadedConfigs: {e}");
+            }
+        }
+
+        private void ValidateConfig()
+        {
+            if (Config.ActivationDelay < 0f)
+            {
+                Log.Warn($"ActivationDelay ({Config.ActivationDelay}) negatif, remis a 0.");
+                Config.ActivationDelay = 0f;
+            }
+
+            if (Config.Announcements is null)
+            {
+                Log.Warn("Announcements est vide, aucune extinction ne sera annoncee.");
+                Config.Announcements = new Dictionary<Team, List<Announcement>>();
+            }
         }
     }
 }

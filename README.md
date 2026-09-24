@@ -4,7 +4,9 @@
 > l'auteur d'origine. Voir [NOTICE.md](NOTICE.md) pour l'attribution.
 
 Annonce l'extinction complete d'une equipe : C.A.S.S.I.E, broadcast, hint et
-effet lumineux.
+effet lumineux. Seule la **mort** du dernier membre declenche l'annonce : une
+deconnexion, une evasion ou un changement de role force par le staff ne compte
+pas comme une extinction.
 
 **EXILED 9.14.2** — `dotnet build -c Release TeamGenocide/TeamGenocide.csproj`
 
